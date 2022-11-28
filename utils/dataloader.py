@@ -80,8 +80,8 @@ class SRDataLoader(LightningDataModule):
 
     def split_data(self):
         images = os.listdir(self.data_dir)
-        train = images[:int(0.8 * len(images))]
-        test = images[int(0.8 * len(images)):]
+        train = images[:int(0.8835186748 * len(images))]
+        test = images[int(0.8835186748* len(images)):]
         os.chdir(self.data_dir)
         for img in train:
             shutil.copy(img, self.train_dir)
@@ -91,7 +91,7 @@ class SRDataLoader(LightningDataModule):
     def setup(self, stage=None):
         if stage == "fit":
             self.train, self.val = random_split(
-                SRDataset(data_dir=self.train_dir, img_size=self.img_size), lengths=[160000, 2080],
+                SRDataset(data_dir=self.train_dir, img_size=self.img_size), lengths=[175000,4000],
                 generator=torch.Generator().manual_seed(0))
         elif stage == 'test':
             self.test = SRDataset(data_dir=self.test_dir,
