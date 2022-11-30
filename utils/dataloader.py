@@ -91,6 +91,7 @@ class SRDataLoader(LightningDataModule):
             shutil.copy(img, self.train_dir)
         for img in test:
             shutil.copy(img, self.test_dir)
+        print('okkk')
         # print("Len data train",len(os.listdir(self.train_dir)))
 
     def setup(self, stage=None):
