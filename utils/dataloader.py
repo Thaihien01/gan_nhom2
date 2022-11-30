@@ -86,20 +86,14 @@ class SRDataLoader(LightningDataModule):
         test = images[200000:]
         print("len train", len(train))
         os.chdir(self.data_dir)
-        print("Create train dir ok")
-        print("len train dir", len(os.listdir(self.train_dir)))
-        for i in os.listdir(self.train_dir):
-            print(i)
-        # for img in train:
-        #     shutil.copy(img, self.train_dir)
-        # for img in test:
-        #     shutil.copy(img, self.test_dir)
-        print('okkk')
-        # print("Len data train",len(os.listdir(self.train_dir)))
+        for img in train:
+            shutil.copy(img, self.train_dir)
+        for img in test:
+            shutil.copy(img, self.test_dir)
 
     def setup(self, stage=None):
         if stage == "fit":
-            tmp =  SRDataset(data_dir=self.data_dir, img_size=self.img_size)
+            tmp =  SRDataset(data_dir=self.train_dir, img_size=self.img_size)
             print("OK:", len(tmp))
             self.train, self.val = random_split(
                 tmp, lengths=[200000,2599],
