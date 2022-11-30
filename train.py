@@ -60,10 +60,10 @@ if __name__ == '__main__':
         save_last=True,
     )
 
-    trainer: Trainer = Trainer(max_epochs=args.epochs,  callbacks=[LogImages()],
+    trainer: Trainer = Trainer(max_epochs=args.epochs, enable_checkpointing = True , callbacks=[LogImages()],
                                gpus=1)
     if args.checkpoint:
-        trainer: Trainer = Trainer(max_epochs=args.epochs, 
+        trainer: Trainer = Trainer(max_epochs=args.epochs, enable_checkpointing = True ,
                                    callbacks=[LogImages()], gpus=1, resume_from_checkpoint=args.checkpoint)
 
     trainer.fit(model=model, datamodule=data)
