@@ -86,11 +86,12 @@ class SRDataLoader(LightningDataModule):
         test = images[200000:]
         print("len train", len(train))
         os.chdir(self.data_dir)
+        print("Create train dir ok")
         for img in train:
             shutil.copy(img, self.train_dir)
         for img in test:
             shutil.copy(img, self.test_dir)
-        print("Len data train",len(os.listdir(self.train_dir)))
+        # print("Len data train",len(os.listdir(self.train_dir)))
 
     def setup(self, stage=None):
         if stage == "fit":
