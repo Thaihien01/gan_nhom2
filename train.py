@@ -52,7 +52,7 @@ if __name__ == '__main__':
     data.setup('fit')
 
     checkpoint_callback = ModelCheckpoint(
-        filepath=args.model_dir,
+        dirpath=args.model_dir,
         save_top_k=args.save_best,
         verbose=True,
         monitor='g_loss',
