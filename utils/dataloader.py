@@ -96,7 +96,7 @@ class SRDataLoader(LightningDataModule):
             tmp =  SRDataset(data_dir=self.train_dir, img_size=self.img_size)
             print("OK:", len(tmp))
             self.train, self.val = random_split(
-                tmp, lengths=[200000,2599],
+                tmp, lengths=[11000,959],
                 generator=torch.Generator().manual_seed(0))
         elif stage == 'test':
             self.test = SRDataset(data_dir=self.test_dir,
