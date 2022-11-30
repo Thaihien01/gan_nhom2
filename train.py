@@ -46,6 +46,7 @@ if __name__ == '__main__':
     else:
         model = SRResNet()
     data = SRDataLoader(data_dir=args.data_dir, batch_size=args.batch_size)
+    data.split_data()
     data.setup('fit')
 
     checkpoint_callback = ModelCheckpoint(
