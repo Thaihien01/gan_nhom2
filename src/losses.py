@@ -22,7 +22,7 @@ class ContentLoss(nn.Module):
                 target [Tensor]: Target or ground truth image for given prediction
         """
         super(ContentLoss, self).__init__()
-        self.gpu = torch.cuda.is_available()
+        self.device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
         self.VGG = PerceptionNet()
         if self.gpu:
             self.VGG = self.VGG.cuda()
