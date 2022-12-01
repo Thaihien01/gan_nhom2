@@ -80,23 +80,25 @@ class SRDataLoader(LightningDataModule):
 
     def split_data(self):
         images = os.listdir(self.data_dir)
-        # train = images[:int(0.8835186748 * len(images))]
-        # test = images[int(0.8835186748* len(images)):]
-        train = images[:200000]
-        test = images[200000:]
-        print("len train", len(train))
+        train = images[:int(0.8 * len(images))]
+        test = images[int(0.8 * len(images)):]
+        print("split_data", len(images), len(train), len(test))
         os.chdir(self.data_dir)
         for img in train:
-            shutil.copy(img, self.train_dir)
+            if img != "train" and img != "test":
+                print("train", img)
+                shutil.copy(img, self.train_dir)
         for img in test:
-            shutil.copy(img, self.test_dir)
+            if img != "train" and img != "test":
+                print("test", img)
+                shutil.copy(img, self.test_dir)
 
     def setup(self, stage=None):
         if stage == "fit":
-            tmp =  SRDataset(data_dir=self.train_dir, img_size=self.img_size)
-            print("OK:", len(tmp))
+            print("self.img_size", self.img_size)
+            print("self.train_dir", self.train_dir)
             self.train, self.val = random_split(
-                tmp, lengths=[11000,959],
+                SRDataset(data_dir=self.train_dir, img_size=self.img_size), lengths=[23000, 1617],
                 generator=torch.Generator().manual_seed(0))
         elif stage == 'test':
             self.test = SRDataset(data_dir=self.test_dir,
