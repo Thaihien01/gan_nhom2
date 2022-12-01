@@ -85,11 +85,11 @@ class SRDataLoader(LightningDataModule):
         print("split_data", len(images), len(train), len(test))
         os.chdir(self.data_dir)
         for img in train:
-            if img != "train" and img != "test":
+            if img != "train" and img != "test" and img != "img_align_celeba":
                 print("train", img)
                 shutil.copy(img, self.train_dir)
         for img in test:
-            if img != "train" and img != "test":
+            if img != "train" and img != "test" and img != "img_align_celeba":
                 print("test", img)
                 shutil.copy(img, self.test_dir)
 
