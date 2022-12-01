@@ -19,9 +19,9 @@ content_loss = ContentLoss()
 class SRResNet(pl.LightningModule):
     def __init__(self):
         super().__init__()
-        self.gpu: bool = torch.cuda.is_available()
+        self.cpu: bool = torch.cuda.is_available()
         self.netG = Generator()
-        if self.gpu:
+        if self.cpu:
             self.netG = self.netG.cuda()
 
     def forward(self, x):
@@ -29,7 +29,7 @@ class SRResNet(pl.LightningModule):
 
     def training_step(self, batch: List[Tensor], batch_idx):
         lr, hr, _ = batch
-        if self.gpu:
+        if self.cpu:
             lr, hr = lr.cuda(), hr.cuda()
         sr = self(lr)
         loss = F.mse_loss(sr, hr) + content_loss(sr, hr)
@@ -48,7 +48,7 @@ class SRResNet(pl.LightningModule):
 
     def validation_step(self, batch: List[Tensor], batch_idx):
         lr, hr, _ = batch
-        if self.gpu:
+        if self.cpu:
             lr, hr = lr.cuda(), hr.cuda()
         sr = self(lr)
         loss = F.mse_loss(sr, hr) + content_loss(sr, hr)
@@ -67,7 +67,7 @@ class SRGAN(pl.LightningModule):
         super(SRGAN, self).__init__()
         self.concat = concat
         self.patch = patch
-        self.gpu: bool = torch.cuda.is_available()
+        self.cpu: bool = torch.cuda.is_available()
         self.netG: nn.Module = SRResNet()
         self.netD: nn.Module = Discriminator(patch=patch, concat=concat)
         if not pretrain_gen:
@@ -77,7 +77,7 @@ class SRGAN(pl.LightningModule):
         else:
             self.netG.load_from_checkpoint(pretrain_gen)
 
-        if self.gpu:
+        if self.cpu:
             self.netD = self.netD.cuda()
             self.netG = self.netG.cuda()
 
@@ -92,7 +92,7 @@ class SRGAN(pl.LightningModule):
 
     def training_step(self, batch: List[Tensor], batch_nb, optimizer_idx: int):
         lr, hr, interpolated_lr = batch
-        if self.gpu:
+        if self.cpu:
             lr, hr, interpolated_lr = lr.cuda(), hr.cuda(), interpolated_lr.cuda()
         self.generated_imgs = self(lr)
 
@@ -143,7 +143,7 @@ class SRGAN(pl.LightningModule):
 
     def validation_step(self, batch: List[Tensor], batch_idx):
         lr, hr, interpolated_lr = batch
-        if self.gpu:
+        if self.cpu:
             lr, hr, interpolated_lr = lr.cuda(), hr.cuda(), interpolated_lr.cuda()
         sr = self(lr)
         d_fake = self.netD(sr, interpolated_lr)
