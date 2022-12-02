@@ -61,9 +61,9 @@ if __name__ == '__main__':
     )
 
     trainer: Trainer = Trainer(max_epochs=args.epochs, enable_checkpointing = True , callbacks=[LogImages()],
-                               gpus=1)
+                               devices=-1, accelerator='auto')
     if args.checkpoint:
         trainer: Trainer = Trainer(max_epochs=args.epochs, enable_checkpointing = True ,
-                                   callbacks=[LogImages()], gpus=1, resume_from_checkpoint=args.checkpoint)
+                                   callbacks=[LogImages()], devices=-1, accelerator='auto', resume_from_checkpoint=args.checkpoint)
 
     trainer.fit(model=model, datamodule=data)

@@ -22,8 +22,8 @@ class ContentLoss(nn.Module):
         super(ContentLoss, self).__init__()
         self.gpu = torch.cuda.is_available()
         self.VGG = PerceptionNet()
-        if self.gpu:
-            self.VGG = self.VGG.cuda()
+        # if self.gpu:
+        #     self.VGG = self.VGG.cuda()
 
     def forward(self, pred: Tensor, target: Tensor):
         real, fake = self.VGG(target), self.VGG(pred)
