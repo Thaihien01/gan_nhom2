@@ -14,15 +14,13 @@ class ContentLoss(nn.Module):
     def __init__(self):
         """Takes in the generated image and the target image, and passes both (separately) through a frozen VGG graph
             Then the output of the VGG activation layers is then used to calculate the Content loss by taking pizel-wise MSE
-
-
             Args
             ----------
                 pred [Tensor] : generated prediction by the generator network
                 target [Tensor]: Target or ground truth image for given prediction
         """
         super(ContentLoss, self).__init__()
-        self.device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
+        self.gpu = torch.cuda.is_available()
         self.VGG = PerceptionNet()
         if self.gpu:
             self.VGG = self.VGG.cuda()
