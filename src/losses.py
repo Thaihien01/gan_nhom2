@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 from src.networks import PerceptionNet
-
+import pytorch_lightning as pl
 
 class ContentLoss(nn.Module):
     def _forward_unimplemented(self, *input: Any) -> None:
