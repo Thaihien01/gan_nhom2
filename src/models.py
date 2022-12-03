@@ -19,7 +19,7 @@ content_loss = ContentLoss()
 class SRResNet(pl.LightningModule):
     def __init__(self):
         super().__init__()
-        self.gpu: bool = torch.cuda.is_available()
+        # self.gpu: bool = torch.cuda.is_available()
         self.netG = Generator()
         # if self.gpu:
         #     self.netG = self.netG.cuda()
