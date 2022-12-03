@@ -48,8 +48,8 @@ if __name__ == '__main__':
     data = SRDataLoader(data_dir=args.data_dir, batch_size=args.batch_size)
     # data.prepare_data()
     # data.download_data()
-    # data.split_data()
-    data.setup('fit')
+    data.split_data()
+    # data.setup('fit')
 
     checkpoint_callback = ModelCheckpoint(
         dirpath=args.model_dir,
