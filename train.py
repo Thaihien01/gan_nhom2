@@ -49,7 +49,7 @@ if __name__ == '__main__':
     # data.prepare_data()
     # data.download_data()
     data.split_data()
-    data.setup('fit')
+    # data.setup('fit')
 
     checkpoint_callback = ModelCheckpoint(
         dirpath=args.model_dir,
