@@ -43,7 +43,7 @@ class SRDataset(Dataset):
         return len(self.filenames)
 
     def __getitem__(self, index):
-        img = Image.open(os.path.join(self.img_dir, self.filenames[index])).to("cuda")
+        img = Image.open(os.path.join(self.img_dir, self.filenames[index]))
         img = self.setSize(img)
         lr_img = recursiveResize(img, 2)
         hr_img = img
@@ -99,10 +99,10 @@ class SRDataLoader(LightningDataModule):
             print("self.train_dir", self.train_dir)
             self.train, self.val = random_split(
                 SRDataset(data_dir=self.train_dir, img_size=self.img_size), lengths=[160000, 2078],
-                generator=torch.Generator().manual_seed(0))
+                generator=torch.Generator().manual_seed(0)).cuda()
         elif stage == 'test':
             self.test = SRDataset(data_dir=self.test_dir,
-                                  img_size=self.img_size)
+                                  img_size=self.img_size).cuda()
 
     def train_dataloader(self, *args, **kwargs):
         return DataLoader(self.train, batch_size=self.batch_size, num_workers=4, drop_last=True,
