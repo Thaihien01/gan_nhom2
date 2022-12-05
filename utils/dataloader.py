@@ -43,7 +43,7 @@ class SRDataset(Dataset):
         return len(self.filenames)
 
     def __getitem__(self, index):
-        img = Image.open(os.path.join(self.img_dir, self.filenames[index]))
+        img = Image.open(os.path.join(self.img_dir, self.filenames[index])).cuda()
         img = self.setSize(img)
         lr_img = recursiveResize(img, 2)
         hr_img = img
