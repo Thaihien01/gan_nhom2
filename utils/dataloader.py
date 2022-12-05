@@ -52,7 +52,7 @@ class SRDataset(Dataset):
             lr_img), self.toTensor(hr_img), self.toTensor(interpolated_img)
         lr_img = torch.tensor(lr_img)
         hr_img = torch.tensor(hr_img)
-        interpolated_img = torch.tensor(interpolated_img)
+        interpolated_img = torch.tensor(interpolated_img.detach().requires_grad_(True)).cuda()  
         return lr_img, hr_img, interpolated_img
 
 
