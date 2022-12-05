@@ -27,7 +27,7 @@ def recursiveResize(img: Image, factor: int = 2):
         resize = Resize((int(height / 2), int(width / 2)),
                         interpolation=Image.BICUBIC)
         img = resize(img)
-    return img.cuda()
+    return img
 
 
 class SRDataset(Dataset):
