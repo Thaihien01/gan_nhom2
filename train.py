@@ -45,6 +45,7 @@ if __name__ == '__main__':
         model = SRGAN(args.pretrain_gen, args.patch, args.concat)
     else:
         model = SRResNet()
+    model = model.cuda()
     data = SRDataLoader(data_dir=args.data_dir, batch_size=args.batch_size)
     # data.prepare_data()
     # data.download_data()
