@@ -106,10 +106,10 @@ class SRDataLoader(LightningDataModule):
 
     def train_dataloader(self, *args, **kwargs):
         return DataLoader(self.train, batch_size=self.batch_size, num_workers=4, drop_last=True,
-                          pin_memory=True)
+                          pin_memory=True).to('cuda')
 
     def val_dataloader(self, *args, **kwargs):
-        return DataLoader(self.val, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True)
+        return DataLoader(self.val, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True).to("cuda")
 
     def test_dataloader(self, *args, **kwargs):
-        return DataLoader(self.test, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True)
+        return DataLoader(self.test, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True).to("cuda")
