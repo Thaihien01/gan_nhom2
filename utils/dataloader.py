@@ -27,7 +27,7 @@ def recursiveResize(img: Image, factor: int = 2):
         resize = Resize((int(height / 2), int(width / 2)),
                         interpolation=Image.BICUBIC)
         img = resize(img)
-    return img
+    return img.cuda()
 
 
 class SRDataset(Dataset):
@@ -106,10 +106,10 @@ class SRDataLoader(LightningDataModule):
 
     def train_dataloader(self, *args, **kwargs):
         return DataLoader(self.train, batch_size=self.batch_size, num_workers=4, drop_last=True,
-                          pin_memory=True).cuda()
+                          pin_memory=True)
 
     def val_dataloader(self, *args, **kwargs):
-        return DataLoader(self.val, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True).cuda()
+        return DataLoader(self.val, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True)
 
     def test_dataloader(self, *args, **kwargs):
-        return DataLoader(self.test, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True).cuda()
+        return DataLoader(self.test, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True)
