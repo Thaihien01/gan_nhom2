@@ -54,7 +54,7 @@ class SRResNet(pl.LightningModule):
         loss = F.mse_loss(sr, hr) + content_loss(sr, hr)
         return {'val_loss': loss}
 
-    def on_validation_epoch_end(self, outputs):
+    def validation_epoch_end(self, outputs):
         val_loss_mean = torch.stack([x['val_loss'] for x in outputs]).mean()
         return {'val_loss': val_loss_mean}
 
@@ -152,7 +152,7 @@ class SRGAN(pl.LightningModule):
         val_loss = self.adversarial_loss(d_fake, real) + content_loss(sr, hr)
         return {'val_loss': val_loss}
 
-    def on_validation_epoch_end(self, outputs):
+    def validation_epoch_end(self, outputs):
         val_loss_mean = torch.stack([x['val_loss'] for x in outputs]).mean()
         return {'val_loss': val_loss_mean}
 
