@@ -106,7 +106,7 @@ if __name__ == "__main__":
     data = SRDataLoader(data_dir=args.data_dir, batch_size=args.batch_size)
     # data.prepare_data()
     # data.download_data()
-    if args.split_data:
+    if args.split_data or args.only_split_data:
         data.split_data()
     
     if not args.only_split_data:
