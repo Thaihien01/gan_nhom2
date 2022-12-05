@@ -13,6 +13,12 @@ parser = argparse.ArgumentParser(
 )
 
 parser.add_argument(
+    "--only_split_data",
+    type=bool,
+    default=False,
+    help="Only split data?",
+)
+parser.add_argument(
     "--split_data",
     type=bool,
     default=False,
@@ -102,30 +108,32 @@ if __name__ == "__main__":
     # data.download_data()
     if args.split_data:
         data.split_data()
-    data.setup("fit")
+    
+    if not args.only_split_data:
+        data.setup("fit")
 
-    checkpoint_callback = ModelCheckpoint(
-        dirpath=args.model_dir,
-        save_top_k=args.save_best,
-        verbose=True,
-        monitor="g_loss",
-        mode="min",
-        save_last=True,
-    )
+        checkpoint_callback = ModelCheckpoint(
+            dirpath=args.model_dir,
+            save_top_k=args.save_best,
+            verbose=True,
+            monitor="g_loss",
+            mode="min",
+            save_last=True,
+        )
 
-    trainer: Trainer = Trainer(
-        max_epochs=args.epochs,
-        enable_checkpointing=True,
-        callbacks=[LogImages()],
-        accelerator="auto",
-    )
-    if args.checkpoint:
         trainer: Trainer = Trainer(
             max_epochs=args.epochs,
             enable_checkpointing=True,
             callbacks=[LogImages()],
             accelerator="auto",
-            resume_from_checkpoint=args.checkpoint,
         )
+        if args.checkpoint:
+            trainer: Trainer = Trainer(
+                max_epochs=args.epochs,
+                enable_checkpointing=True,
+                callbacks=[LogImages()],
+                accelerator="auto",
+                resume_from_checkpoint=args.checkpoint,
+            )
 
-    trainer.fit(model=model, datamodule=data)
+        trainer.fit(model=model, datamodule=data)
