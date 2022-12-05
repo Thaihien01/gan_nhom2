@@ -99,11 +99,14 @@ class SRDataLoader(LightningDataModule):
             print("self.train_dir", self.train_dir)
             self.train, self.val = random_split(
                 SRDataset(data_dir=self.train_dir, img_size=self.img_size), lengths=[160000, 2078],
-                generator=torch.Generator().manual_seed(0)).cuda()
+                generator=torch.Generator().manual_seed(0))
+            self.train = self.train.cuda()
+            self.val = self.val.cuda()
+
         elif stage == 'test':
             self.test = SRDataset(data_dir=self.test_dir,
-                                  img_size=self.img_size).cuda()
-
+                                  img_size=self.img_size)
+            self.test  =self.test.cuda()
     def train_dataloader(self, *args, **kwargs):
         return DataLoader(self.train, batch_size=self.batch_size, num_workers=4, drop_last=True,
                           pin_memory=True)
