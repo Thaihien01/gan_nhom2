@@ -50,7 +50,7 @@ class SRDataset(Dataset):
         interpolated_img = self.setSize(lr_img)
         lr_img, hr_img, interpolated_img = self.toTensor(
             lr_img), self.toTensor(hr_img), self.toTensor(interpolated_img)
-        return lr_img, hr_img, interpolated_img
+        return lr_img.cuda(), hr_img.cuda(), interpolated_img.cuda()
 
 
 class SRDataLoader(LightningDataModule):
