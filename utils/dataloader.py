@@ -109,11 +109,11 @@ class SRDataLoader(LightningDataModule):
                                   img_size=self.img_size)
 
     def train_dataloader(self, *args, **kwargs):
-        return DataLoader(self.train, batch_size=self.batch_size, num_workers=4, drop_last=True,
+        return DataLoader(self.train, batch_size=self.batch_size, num_workers=1, drop_last=True,
                           pin_memory=True)
 
     def val_dataloader(self, *args, **kwargs):
-        return DataLoader(self.val, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True)
+        return DataLoader(self.val, batch_size=self.batch_size, num_workers=1, pin_memory=True, drop_last=True)
 
     def test_dataloader(self, *args, **kwargs):
-        return DataLoader(self.test, batch_size=self.batch_size, num_workers=4, pin_memory=True, drop_last=True)
+        return DataLoader(self.test, batch_size=self.batch_size, num_workers=1, pin_memory=True, drop_last=True)
