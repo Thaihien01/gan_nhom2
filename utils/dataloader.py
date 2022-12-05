@@ -24,20 +24,18 @@ def recursiveResize(img: Image, factor: int = 2):
     for _ in range(factor):
         height, width = img.size
         print(height, width)
-        resize = Resize((int(height / 2), int(width / 2)),
-                        interpolation=Image.BICUBIC)
+        resize = Resize((int(height / 2), int(width / 2)), interpolation=Image.BICUBIC)
         img = resize(img)
     return img
 
 
 class SRDataset(Dataset):
-    def __init__(self, data_dir: str = 'images/train/', img_size: int = 128):
+    def __init__(self, data_dir: str = "images/train/", img_size: int = 128):
         super(SRDataset, self).__init__()
         self.img_dir = data_dir
         self.filenames = os.listdir(self.img_dir)
         self.toTensor = ToTensor()
-        self.setSize = Resize((img_size, img_size),
-                              interpolation=Image.BICUBIC)
+        self.setSize = Resize((img_size, img_size), interpolation=Image.BICUBIC)
 
     def __len__(self):
         return len(self.filenames)
@@ -48,12 +46,15 @@ class SRDataset(Dataset):
         lr_img = recursiveResize(img, 2)
         hr_img = img
         interpolated_img = self.setSize(lr_img)
-        lr_img, hr_img, interpolated_img = self.toTensor(
-            lr_img), self.toTensor(hr_img), self.toTensor(interpolated_img)
-        lr_img = torch.tensor(lr_img)
-        hr_img = torch.tensor(hr_img)
-        interpolated_img = torch.tensor(interpolated_img.detach().requires_grad_(True)).cuda()  
-        return lr_img, hr_img, interpolated_img
+        lr_img, hr_img, interpolated_img = (
+            self.toTensor(lr_img),
+            self.toTensor(hr_img),
+            self.toTensor(interpolated_img),
+        )
+        # lr_img = torch.tensor(lr_img)
+        # hr_img = torch.tensor(hr_img)
+        # interpolated_img = torch.tensor(interpolated_img.detach().requires_grad_(True)).cuda()
+        return lr_img.cuda(), hr_img.cuda(), interpolated_img.cuda()
 
 
 class SRDataLoader(LightningDataModule):
@@ -63,8 +64,8 @@ class SRDataLoader(LightningDataModule):
         self.url = url
 
         self.data_dir = Path(data_dir)
-        self.train_dir = Path(os.getcwd(), self.data_dir, 'train')
-        self.test_dir = Path(os.getcwd(), self.data_dir, 'test')
+        self.train_dir = Path(os.getcwd(), self.data_dir, "train")
+        self.test_dir = Path(os.getcwd(), self.data_dir, "test")
         self.train_dir.mkdir(parents=True, exist_ok=True)
         self.test_dir.mkdir(parents=True, exist_ok=True)
 
@@ -78,13 +79,13 @@ class SRDataLoader(LightningDataModule):
 
     def download_data(self, url: str):
         req = requests.get(url)
-        with open(f'{self.data_dir}', 'wb+') as data_dir:
+        with open(f"{self.data_dir}", "wb+") as data_dir:
             data_dir.write(req.content)
 
     def split_data(self):
         images = os.listdir(self.data_dir)
-        train = images[:int(0.8 * len(images))]
-        test = images[int(0.8 * len(images)):]
+        train = images[: int(0.8 * len(images))]
+        test = images[int(0.8 * len(images)) :]
         print("split_data", len(images), len(train), len(test))
         os.chdir(self.data_dir)
         for img in train:
@@ -101,19 +102,21 @@ class SRDataLoader(LightningDataModule):
             print("self.img_size", self.img_size)
             print("self.train_dir", self.train_dir)
             self.train, self.val = random_split(
-                SRDataset(data_dir=self.train_dir, img_size=self.img_size), lengths=[160000, 2078],
-                generator=torch.Generator().manual_seed(0))
+                SRDataset(data_dir=self.train_dir, img_size=self.img_size),
+                lengths=[160000, 2078],
+                generator=torch.Generator().manual_seed(0),
+            )
 
-        elif stage == 'test':
-            self.test = SRDataset(data_dir=self.test_dir,
-                                  img_size=self.img_size)
+        elif stage == "test":
+            self.test = SRDataset(data_dir=self.test_dir, img_size=self.img_size)
 
     def train_dataloader(self, *args, **kwargs):
-        return DataLoader(self.train, batch_size=self.batch_size, num_workers=1, drop_last=True,
-                          pin_memory=True)
+        return DataLoader(
+            self.train, batch_size=self.batch_size, drop_last=True, shuffle=True
+        )
 
     def val_dataloader(self, *args, **kwargs):
-        return DataLoader(self.val, batch_size=self.batch_size, num_workers=1, pin_memory=True, drop_last=True)
+        return DataLoader(self.val, batch_size=self.batch_size, drop_last=True)
 
     def test_dataloader(self, *args, **kwargs):
-        return DataLoader(self.test, batch_size=self.batch_size, num_workers=1, pin_memory=True, drop_last=True)
+        return DataLoader(self.test, batch_size=self.batch_size, drop_last=True)
