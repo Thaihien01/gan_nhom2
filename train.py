@@ -123,6 +123,7 @@ if __name__ == "__main__":
 
         trainer: Trainer = Trainer(
             max_epochs=args.epochs,
+            checkpoint_callback=checkpoint_callback,
             enable_checkpointing=True,
             callbacks=[LogImages()],
             accelerator="auto",
@@ -130,6 +131,7 @@ if __name__ == "__main__":
         if args.checkpoint:
             trainer: Trainer = Trainer(
                 max_epochs=args.epochs,
+                checkpoint_callback=checkpoint_callback,
                 enable_checkpointing=True,
                 callbacks=[LogImages()],
                 accelerator="auto",
