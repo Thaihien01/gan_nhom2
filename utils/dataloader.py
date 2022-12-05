@@ -50,6 +50,7 @@ class SRDataset(Dataset):
         interpolated_img = self.setSize(lr_img)
         lr_img, hr_img, interpolated_img = self.toTensor(
             lr_img), self.toTensor(hr_img), self.toTensor(interpolated_img)
+        print(type(lr_img))
         return lr_img, hr_img, interpolated_img
 
 
@@ -100,13 +101,11 @@ class SRDataLoader(LightningDataModule):
             self.train, self.val = random_split(
                 SRDataset(data_dir=self.train_dir, img_size=self.img_size), lengths=[160000, 2078],
                 generator=torch.Generator().manual_seed(0))
-            self.train = self.train.cuda()
-            self.val = self.val.cuda()
 
         elif stage == 'test':
             self.test = SRDataset(data_dir=self.test_dir,
                                   img_size=self.img_size)
-            self.test  =self.test.cuda()
+
     def train_dataloader(self, *args, **kwargs):
         return DataLoader(self.train, batch_size=self.batch_size, num_workers=4, drop_last=True,
                           pin_memory=True)
